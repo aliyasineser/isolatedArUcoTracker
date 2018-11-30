@@ -36,7 +36,7 @@
 *.app
 
 ### Build Dir ###
-build/
+build/*
 build
 
 ### CMake ###
