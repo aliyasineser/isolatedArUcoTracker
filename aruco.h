@@ -55,8 +55,8 @@ private:
     static constexpr double halfSideOfTheMarker = 0.05;
 
     // ArUco based landing constants
-    int activeMarkers[NUMBEROFMARKERS] = {10, 50, 20}; // Markers those will be used for process. Others will be ignored.
-    static constexpr int LIMITPOINTS = 7;  // Store limit for positions. If set to x, x offsets from the last x frames will be stored to calculate.
+    int activeMarkers[NUMBEROFMARKERS] = {5, 6, 7}; // Markers those will be used for process. Others will be ignored.
+    static constexpr int LIMITPOINTS = 5;  // Store limit for positions. If set to x, x offsets from the last x frames will be stored to calculate.
 
 };
 

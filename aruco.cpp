@@ -185,28 +185,72 @@ vector<vision_offset> c_aruco::visionFindMarker(const cv::Mat img){
 }
 
 
+// vector<vision_offset> c_aruco::arucoUpdate(vector<vision_offset> offs){
+
+//     if(offs.empty()) vector<vision_offset>(0);
+
+//     // If the size exceeds limit, remove an element.
+//     for(int i = 0; i < offsetContainer.size(); ++i)
+//         if(offsetContainer.size() >= this->LIMITPOINTS)
+//             offsetContainer[i].pop_front();
+
+//     // Last frame drop, new frame in. 
+//     for(int i = 0; i < NUMBEROFMARKERS; ++i){
+//         bool isMarkerFound = false;
+//         for(vector<vision_offset>::iterator it = offs.begin(); it != offs.end(); ++it){
+//             if(it->markerId == this->activeMarkers[i]){
+//                 offsetContainer[i].push_back(*it);
+//                 isMarkerFound = true;
+//             }
+//         }
+
+//         if(!isMarkerFound && !offsetContainer[i].empty())
+//                 offsetContainer[i].pop_front();
+//     }
+//     // Calculate the average for the markers
+//     for(int i = 0; i < NUMBEROFMARKERS; ++i){
+//         normalizedCoords[i].x = normalizedCoords[i].y = normalizedCoords[i].z = normalizedCoords[i].yaw = 0.0f;
+//         for(list<vision_offset>::iterator it = offsetContainer[i].begin(); it != offsetContainer[i].end(); ++it){
+//             normalizedCoords[i].x += it->x / offsetContainer[i].size();
+//             normalizedCoords[i].y += it->y / offsetContainer[i].size();
+//             normalizedCoords[i].z += it->z / offsetContainer[i].size();
+            
+//             if(it->yaw >= 0)
+//                 normalizedCoords[i].yaw += it->yaw / offsetContainer[i].size(); // already positif degree
+//             else
+//                 normalizedCoords[i].yaw += ( it->yaw + 360.0) / offsetContainer[i].size(); // negative to positive space
+            
+
+//         }
+//         normalizedCoords[i].markerId = this->activeMarkers[i];
+//     }
+
+//     return normalizedCoords;
+// }
+
+
+
 vector<vision_offset> c_aruco::arucoUpdate(vector<vision_offset> offs){
 
-    if(offs.empty()) vector<vision_offset>(0); // TODO: Exception or correction
-
-    // If the size exceeds limit, remove an element.
-    for(int i = 0; i < offsetContainer.size(); ++i)
-        if(offsetContainer.size() >= this->LIMITPOINTS)
-            offsetContainer[i].pop_front();
+    if(offs.empty()) return normalizedCoords; // Nothing we can do, no marker is detected.
 
     // Last frame drop, new frame in. 
+    
     for(int i = 0; i < NUMBEROFMARKERS; ++i){
-        bool isMarkerFound = false;
         for(vector<vision_offset>::iterator it = offs.begin(); it != offs.end(); ++it){
             if(it->markerId == this->activeMarkers[i]){
                 offsetContainer[i].push_back(*it);
-                isMarkerFound = true;
             }
         }
-
-        if(!isMarkerFound && !offsetContainer[i].empty())
-                offsetContainer[i].pop_front();
     }
+
+    // If the size exceeds limit, remove an element.
+    for(int i = 0; i < offsetContainer.size(); ++i){
+        if(offsetContainer[i].size() >= this->LIMITPOINTS)
+            offsetContainer[i].pop_front();
+    }
+    
+
     // Calculate the average for the markers
     for(int i = 0; i < NUMBEROFMARKERS; ++i){
         normalizedCoords[i].x = normalizedCoords[i].y = normalizedCoords[i].z = normalizedCoords[i].yaw = 0.0f;
